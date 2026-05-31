@@ -1,0 +1,13 @@
+{"type":"session.start","data":{"sessionId":"aabb1122-0000-0000-0000-000000000002","selectedModel":"claude-haiku-4.5","startTime":"2026-05-31T01:00:00.000Z"},"id":"e1","timestamp":"2026-05-31T01:00:00.000Z","parentId":null}
+{"type":"user.message","data":{"content":"Run some tests for me"},"id":"e2","timestamp":"2026-05-31T01:00:01.000Z","parentId":"e1"}
+{"type":"assistant.turn_start","data":{"turnId":"0","interactionId":"int-001"},"id":"e3","timestamp":"2026-05-31T01:00:02.000Z","parentId":"e2"}
+{"type":"assistant.message","data":{"messageId":"m1","content":"","toolRequests":[{"toolCallId":"tc001","name":"powershell","type":"function"}],"interactionId":"int-001","outputTokens":85,"requestId":"REQ001"},"id":"e4","timestamp":"2026-05-31T01:00:03.000Z","parentId":"e3"}
+{"type":"tool.execution_complete","data":{"toolCallId":"tc001","model":"claude-haiku-4.5","interactionId":"int-001","success":true,"result":{"content":"Tests passed: 42","detailedContent":"All 42 tests passed in 1.2s"},"toolTelemetry":{}},"id":"e5","timestamp":"2026-05-31T01:00:04.000Z","parentId":"e4"}
+{"type":"assistant.message","data":{"messageId":"m2","content":"All tests passed.","toolRequests":[],"interactionId":"int-001","outputTokens":12,"requestId":"REQ002"},"id":"e6","timestamp":"2026-05-31T01:00:05.000Z","parentId":"e5"}
+{"type":"assistant.turn_end","data":{"turnId":"0"},"id":"e7","timestamp":"2026-05-31T01:00:06.000Z","parentId":"e6"}
+{"type":"assistant.turn_start","data":{"turnId":"1","interactionId":"int-002"},"id":"e8","timestamp":"2026-05-31T01:00:10.000Z","parentId":"e7"}
+{"type":"assistant.message","data":{"messageId":"m3","content":"","toolRequests":[{"toolCallId":"tc002","name":"view","type":"function"}],"interactionId":"int-002","outputTokens":55,"requestId":"REQ003"},"id":"e9","timestamp":"2026-05-31T01:00:11.000Z","parentId":"e8"}
+{"type":"tool.execution_complete","data":{"toolCallId":"tc002","model":"claude-haiku-4.5","interactionId":"int-002","success":true,"result":{"content":"def hello():\n    return 'world'\n"},"toolTelemetry":{}},"id":"e10","timestamp":"2026-05-31T01:00:12.000Z","parentId":"e9"}
+{"type":"assistant.message","data":{"messageId":"m4","content":"The file looks good.","toolRequests":[],"interactionId":"int-002","outputTokens":8,"requestId":"REQ004"},"id":"e11","timestamp":"2026-05-31T01:00:13.000Z","parentId":"e10"}
+{"type":"assistant.turn_end","data":{"turnId":"1"},"id":"e12","timestamp":"2026-05-31T01:00:14.000Z","parentId":"e11"}
+{"type":"session.shutdown","data":{},"id":"e13","timestamp":"2026-05-31T01:05:00.000Z","parentId":"e12"}

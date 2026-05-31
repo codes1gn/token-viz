@@ -1,0 +1,5 @@
+# token-viz has zero runtime dependencies.
+# All packages used are from the Python standard library.
+#
+# Dev/test dependencies (optional):
+# pytest>=7.0  (can also run tests/run_tests.py directly without pytest)

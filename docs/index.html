@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>token-viz — AI Token Cost Visualizer</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --blue: #58a6ff;
+      --green: #3fb950;
+      --orange: #d29922;
+      --purple: #bc8cff;
+      --red: #f85149;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    nav .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+    nav a:hover { color: var(--text); }
+    nav .star-badge {
+      margin-left: auto;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .badge-blue   { background: #1f3d6b; color: var(--blue); }
+    .badge-green  { background: #1a3b2a; color: var(--green); }
+    .badge-orange { background: #3d2e1a; color: var(--orange); }
+    .badge-purple { background: #2e1f4d; color: var(--purple); }
+    .cta-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary  { background: var(--blue);   color: #0d1117; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+    /* TERMINAL DEMO */
+    .terminal-wrap {
+      max-width: 700px;
+      margin: 0 auto 5rem;
+      padding: 0 2rem;
+    }
+    .terminal {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .terminal-bar {
+      background: var(--surface2);
+      padding: 0.5rem 1rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red   { background: #ff5f57; }
+    .dot-yel   { background: #ffbd2e; }
+    .dot-grn   { background: #28c940; }
+    .terminal-title { margin-left: auto; margin-right: auto; font-size: 0.8rem; color: var(--muted); }
+    .terminal-body { padding: 1.25rem 1.5rem; font-family: "SF Mono", "Fira Code", monospace; font-size: 0.85rem; line-height: 1.8; }
+    .t-cmd   { color: #79c0ff; }
+    .t-dim   { color: var(--muted); }
+    .t-key   { color: var(--blue); }
+    .t-val   { color: var(--green); }
+    .t-est   { color: var(--orange); }
+    .t-sep   { color: #30363d; }
+
+    /* FEATURES */
+    .features {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+    .features h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    .feature-card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--blue); }
+    .feature-card p  { color: var(--muted); font-size: 0.9rem; }
+
+    /* INSTALL */
+    .install {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+      text-align: center;
+    }
+    .install h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    .code-block {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.9rem;
+      text-align: left;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+    }
+    .code-block span.prompt { color: var(--muted); }
+
+    /* FOOTER */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--blue); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">⚡ token-viz</a>
+  <a href="https://github.com/codes1gn/token-viz">GitHub</a>
+  <a href="https://github.com/codes1gn/token-viz/blob/main/SKILL.md">Skill Docs</a>
+  <a href="https://github.com/codes1gn/token-viz#readme">README</a>
+  <a class="star-badge" href="https://github.com/codes1gn/token-viz">★ Star on GitHub</a>
+</nav>
+
+<section class="hero">
+  <h1>Know where your tokens go.</h1>
+  <p>Parse GitHub Copilot CLI &amp; Cursor session logs. Generate interactive cost dashboards. Zero dependencies. Offline.</p>
+  <div class="badges">
+    <span class="badge badge-blue">Python 3.8+</span>
+    <span class="badge badge-green">8,400 tests passing</span>
+    <span class="badge badge-orange">Zero dependencies</span>
+    <span class="badge badge-purple">Standalone HTML output</span>
+  </div>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="https://github.com/codes1gn/token-viz">View on GitHub</a>
+    <a class="btn btn-secondary" href="https://github.com/codes1gn/token-viz/blob/main/README.md">Documentation</a>
+  </div>
+</section>
+
+<div class="terminal-wrap">
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yel"></div>
+      <div class="dot dot-grn"></div>
+      <span class="terminal-title">tv analyze events.jsonl</span>
+    </div>
+    <div class="terminal-body">
+      <span class="t-cmd">$ tv analyze ~/.copilot/session-state/abc123/events.jsonl</span><br>
+      <br>
+      <span class="t-sep">────────────────────────────────────────────────────</span><br>
+      <span class="t-key">Session</span>       abc12345  |  <span class="t-key">Model</span>  claude-sonnet-4.6<br>
+      <span class="t-key">Duration</span>      4h 23m    |  <span class="t-key">Turns</span>  881<br>
+      <span class="t-key">Subagents</span>     4         |  <span class="t-key">Compactions</span>  21<br>
+      <span class="t-sep">────────────────────────────────────────────────────</span><br>
+      <span class="t-key">Output tokens</span>  (exact):    <span class="t-val">1,247,330</span><br>
+      <span class="t-key">Input estimate</span>:           <span class="t-est">~3,500,000</span><br>
+      <span class="t-key">Total cost</span>    estimate:   <span class="t-est">~$55.42</span><br>
+      <span class="t-sep">────────────────────────────────────────────────────</span><br>
+      <span class="t-key">By component:</span><br>
+      &nbsp;&nbsp;subagent  (4):   <span class="t-val">142,000</span> tokens   <span class="t-val">$2.13</span><br>
+      &nbsp;&nbsp;skill     (1):  <span class="t-est">~4,200</span> tokens  <span class="t-est">~$0.01</span><br>
+      &nbsp;&nbsp;tool  (1,323):  <span class="t-est">~82,000</span> tokens  <span class="t-est">~$0.25</span><br>
+      &nbsp;&nbsp;main      (1): <span class="t-val">1,019,130</span> tokens  <span class="t-val">$15.29</span><br>
+      <span class="t-sep">────────────────────────────────────────────────────</span><br>
+      <span class="t-dim">Run `tv report events.jsonl -o report.html` for interactive dashboard</span>
+    </div>
+  </div>
+</div>
+
+<section class="features">
+  <h2>Everything you need to understand your AI costs</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="icon">🎯</div>
+      <h3>Exact Token Counts</h3>
+      <p>Reads <code>outputTokens</code> directly from <code>assistant.message</code> events and context snapshots from <code>session.compaction_start</code> — not estimates, not guesses.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🤖</div>
+      <h3>Subagent Attribution</h3>
+      <p>Detects <code>subagent.started/completed</code> spans and attributes turns within that window to the subagent. Know exactly how much each spawned agent costs.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📚</div>
+      <h3>Skill Injection Tracking</h3>
+      <p>Captures <code>skill.invoked</code> events and estimates the token cost of every skill's content injection into context — the silent cost nobody talks about.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📊</div>
+      <h3>5-Tab Interactive Report</h3>
+      <p>Overview, Context donut, Timeline bars, Components breakdown, and Top Consumers — all in a single offline HTML file. No server. No internet.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">💰</div>
+      <h3>14-Model Pricing Table</h3>
+      <p>Built-in prices for Claude Sonnet/Haiku/Opus, GPT-4o, GPT-4.1, and more. Override with your own pricing file. Always shows exact vs estimated clearly.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔒</div>
+      <h3>Zero Dependencies</h3>
+      <p>Pure Python stdlib. No <code>pip install</code> besides the package itself. Runs anywhere Python 3.8 runs. No API keys, no network access, no telemetry.</p>
+    </div>
+  </div>
+</section>
+
+<section class="install">
+  <h2>Get started in 30 seconds</h2>
+  <div class="code-block">
+    <span class="prompt">$</span> git clone https://github.com/codes1gn/token-viz<br>
+    <span class="prompt">$</span> cd token-viz &amp;&amp; pip install -e .<br>
+    <span class="prompt">$</span> tv sessions    <span style="color:#8b949e"># find most expensive sessions</span>
+  </div>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="https://github.com/codes1gn/token-viz">View on GitHub</a>
+    <a class="btn btn-secondary" href="https://github.com/codes1gn/token-viz/blob/main/SKILL.md">Skill Integration Docs</a>
+  </div>
+</section>
+
+<footer>
+  Built with Python stdlib · <a href="https://github.com/codes1gn/token-viz/blob/main/LICENSE">MIT License</a> ·
+  <a href="https://github.com/codes1gn/token-viz">GitHub</a>
+</footer>
+
+</body>
+</html>

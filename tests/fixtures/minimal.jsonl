@@ -1,0 +1,7 @@
+{"type":"session.start","data":{"sessionId":"aabb1122-0000-0000-0000-000000000001","selectedModel":"claude-sonnet-4.6","startTime":"2026-05-31T00:00:00.000Z"},"id":"e1","timestamp":"2026-05-31T00:00:00.000Z","parentId":null}
+{"type":"system.message","data":{"role":"system","content":"You are a helpful AI assistant."},"id":"e2","timestamp":"2026-05-31T00:00:01.000Z","parentId":"e1"}
+{"type":"user.message","data":{"content":"Hello, help me write code"},"id":"e3","timestamp":"2026-05-31T00:00:02.000Z","parentId":"e2"}
+{"type":"assistant.turn_start","data":{"turnId":"0","interactionId":"int-001"},"id":"e4","timestamp":"2026-05-31T00:00:03.000Z","parentId":"e3"}
+{"type":"assistant.message","data":{"messageId":"m1","content":"I will help you write code.","toolRequests":[],"interactionId":"int-001","outputTokens":12,"requestId":"REQ001"},"id":"e5","timestamp":"2026-05-31T00:00:04.000Z","parentId":"e4"}
+{"type":"assistant.turn_end","data":{"turnId":"0"},"id":"e6","timestamp":"2026-05-31T00:00:05.000Z","parentId":"e5"}
+{"type":"session.shutdown","data":{},"id":"e7","timestamp":"2026-05-31T00:01:00.000Z","parentId":"e6"}
