@@ -259,9 +259,17 @@ def _parse_duration(start: str, end: str) -> float:
         fmt = "%Y-%m-%dT%H:%M:%S.%fZ"
         # Handle both with and without milliseconds
         def parse_ts(s):
-            for f in ("%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ"):
+            # Normalize: strip Z suffix and any +HH:MM/-HH:MM timezone offset
+            s = s.rstrip("Z")
+            # Check for offset after seconds (pos 19) or after microseconds (pos 26)
+            for cut in (26, 19):
+                if len(s) > cut and s[cut] in "+-":
+                    s = s[:cut]
+                    break
+            s = s[:26]
+            for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S"):
                 try:
-                    return datetime.strptime(s[:26].replace("+08:00", "").rstrip("Z") + "Z", f)
+                    return datetime.strptime(s, fmt)
                 except ValueError:
                     continue
             return None
